@@ -1,0 +1,2 @@
+require './flickrhook'
+run FlickrHook
