@@ -1,2 +1,2 @@
-require './flickrhook'
-run FlickrHook
+require './ernesto'
+run Ernesto

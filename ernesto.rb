@@ -4,12 +4,12 @@ require 'sinatra'
 require 'json'
 require 'flickraw'
 
-class FlickrHook < Sinatra::Base
+class Ernesto < Sinatra::Base
   configure do
     FlickRaw.api_key = ENV['flickr_api_key']
     FlickRaw.shared_secret = ENV['flickr_shared_secret']
   end
-  
+
   post '/webhook' do
     $stderr.puts params.inspect
     query = params[:text].sub(/^#{params[:trigger_word]}\s*/,'')
