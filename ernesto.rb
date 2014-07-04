@@ -4,18 +4,41 @@ require 'sinatra'
 require 'json'
 require 'flickraw'
 
-class Ernesto < Sinatra::Base
-  configure do
-    FlickRaw.api_key = ENV['flickr_api_key']
-    FlickRaw.shared_secret = ENV['flickr_shared_secret']
+module Ernesto
+  class Helpers
+    def flickr(params)
+      api = FlickRaw::Flickr.new
+      query = params[:text].sub(/^#{params[:trigger_word]}\s*/,'')
+      list = api.photos.search text: query
+      info = api.photos.getInfo(photo_id: list.to_a.sample.id)
+      FlickRaw.url_b(info)
+    end
+
+    def trying(params)
+      user = params[:user_name]
+      "Try harder, #{user}"
+    end
   end
 
-  post '/webhook' do
-    $stderr.puts params.inspect
-    query = params[:text].sub(/^#{params[:trigger_word]}\s*/,'')
-    list = flickr.photos.search text: query
-    info = flickr.photos.getInfo(photo_id: list.to_a.sample.id)
-    content_type 'application/json'
-    { 'text' => FlickRaw.url_b(info) }.to_json
+  class Application < Sinatra::Base
+    configure do
+      FlickRaw.api_key = ENV['flickr_api_key']
+      FlickRaw.shared_secret = ENV['flickr_shared_secret']
+      set :hooks, {
+        flickr: /flickr/,
+        trying: /trying/
+      }
+    end
+
+    post '/webhook' do
+      trigger = params[:trigger_word].strip.downcase
+      helper  = settings.hooks.find { |m,re| trigger =~ re }.first
+      content_type 'application/json'
+      response = Helpers.new.send(helper, params)
+      case response
+      when Hash then response.to_json
+      when String then { 'text' => response }.to_json
+      end
+    end
   end
 end

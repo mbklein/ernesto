@@ -1,2 +1,2 @@
 require './ernesto'
-run Ernesto
+run Ernesto::Application
