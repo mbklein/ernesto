@@ -9,9 +9,9 @@ module Ernesto
     def flickr(params)
       api = FlickRaw::Flickr.new
       query = params[:text].sub(/^#{params[:trigger_word]}\s*/,'')
-      list = api.photos.search text: query
+      list = api.photos.search text: query, privacy_filter: 1, per_page: 20
       info = api.photos.getInfo(photo_id: list.to_a.sample.id)
-      FlickRaw.url_b(info)
+      "#{info.title}\n#{FlickRaw.url_b(info)}"
     end
 
     def trying(params)
