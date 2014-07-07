@@ -12,8 +12,12 @@ module Ernesto
       list = api.photos.search text: query, privacy_filter: 1, per_page: 30
       info = api.photos.getInfo(photo_id: list.to_a.sample.id)
       sizes = api.photos.getSizes(photo_id: info.id)
-      url = (sizes.find { |s| s['Label'] == 'Large' } || sizes[-1])['source']
-      "#{info.title}\n#{url}"
+      url = sizes.to_a.reverse.find { |s| s['label'] !~ /Original/i }['source']
+      result = { text: "#{info.title}\n#{url}" }
+      if params[:debug]
+        result['sizes'] = sizes.to_a.collect { |s| s.to_hash }
+      end
+      result
     end
 
     def trying(params)
