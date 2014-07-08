@@ -10,8 +10,11 @@ module Ernesto
       api = FlickRaw::Flickr.new
       query = params[:text].sub(/^#{params[:trigger_word]}\s*/,'')
       list = api.photos.search text: query, privacy_filter: 1, per_page: 30
-      info = api.photos.getInfo(photo_id: list.to_a.sample.id)
-      sizes = api.photos.getSizes(photo_id: info.id)
+      sample = list.to_a.compact.sample
+      return 'No results found.' if sample.nil?
+
+      info = api.photos.getInfo(photo_id: sample.id)
+      sizes = api.photos.getSizes(photo_id: sample.id)
       url = sizes.to_a.reverse.find { |s| s['label'] !~ /Original/i }['source']
       result = { text: "<#{url}|#{info.title}>" }
       if params[:debug]
