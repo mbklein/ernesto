@@ -13,7 +13,7 @@ module Ernesto
       info = api.photos.getInfo(photo_id: list.to_a.sample.id)
       sizes = api.photos.getSizes(photo_id: info.id)
       url = sizes.to_a.reverse.find { |s| s['label'] !~ /Original/i }['source']
-      result = { text: "#{info.title}\n#{url}" }
+      result = { text: "<#{url}|#{info.title}>" }
       if params[:debug]
         result['sizes'] = sizes.to_a.collect { |s| s.to_hash }
       end
