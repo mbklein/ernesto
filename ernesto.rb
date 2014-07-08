@@ -7,11 +7,17 @@ require 'flickraw'
 module Ernesto
   class Helpers
     def flickr(params)
+      consolation_prizes = [
+        'taco :taco:',
+        'drink :cocktail:',
+        '<http://i.imgur.com/Ijz3Uwg.gif|monkey washing a cat>',
+        'whole bunch of nothing'
+      ]
       api = FlickRaw::Flickr.new
       query = params[:text].sub(/^#{params[:trigger_word]}\s*/,'')
       list = api.photos.search text: query, privacy_filter: 1, per_page: 30
       sample = list.to_a.compact.sample
-      return "No results found. But here's a <http://i.imgur.com/Ijz3Uwg.gif|monkey washing a cat>." if sample.nil?
+      return "No results found. But here's a #{consolation_prizes.sample}." if sample.nil?
 
       info = api.photos.getInfo(photo_id: sample.id)
       sizes = api.photos.getSizes(photo_id: sample.id)
