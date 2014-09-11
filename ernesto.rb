@@ -29,6 +29,13 @@ module Ernesto
       result
     end
 
+    def
+
+    def eightball(params)
+      resp = (1..32).to_a.sample
+      { text: "<http://toastbucket.com/balls/31.gif|>" }
+    end
+
     def trying(params)
       user = params[:user_name]
       "Try harder, #{user}"
@@ -41,7 +48,8 @@ module Ernesto
       FlickRaw.shared_secret = ENV['flickr_shared_secret']
       set :hooks, {
         flickr: /flickr/,
-        trying: /trying/
+        trying: /trying/,
+        eightball: /^8-?[Bb]all/
       }
     end
 
