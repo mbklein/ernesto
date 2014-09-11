@@ -29,11 +29,9 @@ module Ernesto
       result
     end
 
-    def
-
     def eightball(params)
       resp = (1..32).to_a.sample
-      { text: "<http://toastbucket.com/balls/31.gif|>" }
+      { text: "<http://toastbucket.com/balls/31.gif|8-BALL>" }
     end
 
     def trying(params)
