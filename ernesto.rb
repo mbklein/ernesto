@@ -31,7 +31,8 @@ module Ernesto
 
     def eightball(params)
       resp = (1..32).to_a.sample
-      { text: "<http://toastbucket.com/balls/#{resp}.gif|8-BALL>" }
+      cacheBuster = rand(10000)
+      { text: "<http://toastbucket.com/balls/#{resp}.gif?#{cacheBuster}|#{user_name}: “#{query}”>" }
     end
 
     def trying(params)
