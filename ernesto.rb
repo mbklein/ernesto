@@ -14,7 +14,7 @@ module Ernesto
         'whole bunch of nothing.'
       ]
       api = FlickRaw::Flickr.new
-      query = params[:text].sub(/^#{params[:trigger_word]}\s*/,'')
+      query = params[:text].sub(/^#{params[:trigger_word]}\w*/,'')
       list = api.photos.search text: query, privacy_filter: 1, per_page: 30
       sample = list.to_a.compact.sample
       return "No results found. But here's a #{consolation_prizes.sample}" if sample.nil?
