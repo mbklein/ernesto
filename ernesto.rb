@@ -31,7 +31,7 @@ module Ernesto
 
     def eightball(params)
       resp = (1..32).to_a.sample
-      query = params[:text].sub(/^#{params[:trigger_word]}\w*/,'')
+      query = params[:text].sub(/^#{params[:trigger_word]}\W+/,'')
       user = params[:user_name]
       cacheBuster = rand(10000)
       { text: "<http://toastbucket.com/balls/#{resp}.gif?#{cacheBuster}|#{user}: “#{query}”>" }
