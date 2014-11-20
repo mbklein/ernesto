@@ -45,7 +45,11 @@ module Ernesto
     def roll(params)
       request = params[:text].split(/\s+/).last
       (count,die) = request.split(/[dD]/).collect(&:to_i)
-      (1..count).collect { rand(1..die.to_i) }.join(", ")
+      if count > 1000
+        "Fuck you and your big numbers."
+      else
+        (1..count).collect { rand(1..die.to_i) }.join(", ")
+      end
     end
   end
 
