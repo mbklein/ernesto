@@ -41,6 +41,12 @@ module Ernesto
       user = params[:user_name]
       "Try harder, #{user}"
     end
+
+    def roll(params)
+      request = params[:text].split(/\s+/).last
+      (count,die) = request.split(/[dD]/).collect(&:to_i)
+      (1..count).collect { rand(1..die.to_i) }.join(", ")
+    end
   end
 
   class Application < Sinatra::Base
@@ -50,7 +56,8 @@ module Ernesto
       set :hooks, {
         flickr: /flickr/,
         trying: /trying/,
-        eightball: /^8-?[Bb]all/
+        eightball: /^8-?[Bb]all/,
+        roll: /roll/
       }
     end
 
