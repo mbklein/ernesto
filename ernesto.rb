@@ -3,9 +3,19 @@
 require 'sinatra'
 require 'json'
 require 'flickraw'
+require 'uri'
+require 'open-uri'
 
 module Ernesto
   class Helpers
+    def anagram(params)
+      query = params[:text].sub(/^#{params[:trigger_word]}\w*/,'').strip
+      query_string = "source_text=#{URI.encode(query)}&seen=true&submitbutton=Generate%20Anagrams"
+      resp = open("http://www.anagramgenius.com/server.php?#{query_string}").read
+      result = resp.scan(%r{anagrams to.+<span class="black-18">\s*'(.+?)'\s*</span>}).flatten.first
+      { text: %{"#{query}" ~> "#{result}"} }
+    end
+    
     def flickr(params)
       consolation_prizes = [
         'taco. :taco:',
@@ -61,7 +71,8 @@ module Ernesto
         flickr: /flickr/,
         trying: /trying/,
         eightball: /^8-?[Bb]all/,
-        roll: /roll/
+        roll: /roll/,
+        anagram: /^ana(gram)?/
       }
     end
 
