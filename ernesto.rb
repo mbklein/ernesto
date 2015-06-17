@@ -44,7 +44,7 @@ module Ernesto
       query = params[:text].sub(/^#{params[:trigger_word]}\W+/,'')
       user = params[:user_name]
       cacheBuster = rand(10000)
-      img = params[:trigger_word] =~ /^enable/ ? 'http://i.imgur.com/NySLl3v.jpg' : "http://toastbucket.com/balls/#{resp}.gif?#{cacheBuster}"
+      img = params[:trigger_word] =~ /^[Ee]nable/ ? 'http://i.imgur.com/NySLl3v.jpg' : "http://toastbucket.com/balls/#{resp}.gif?#{cacheBuster}"
       { text: "<#{img}|#{user}: “#{query}”>" }
     end
 
