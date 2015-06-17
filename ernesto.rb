@@ -15,7 +15,7 @@ module Ernesto
       result = resp.scan(%r{anagrams to.+<span class="black-18">\s*'(.+?)'\s*</span>}).flatten.first
       { text: %{"#{query}" ~> "#{result}"} }
     end
-    
+
     def flickr(params)
       consolation_prizes = [
         'taco. :taco:',
@@ -38,13 +38,14 @@ module Ernesto
       end
       result
     end
-
+    
     def eightball(params)
       resp = (1..32).to_a.sample
       query = params[:text].sub(/^#{params[:trigger_word]}\W+/,'')
       user = params[:user_name]
       cacheBuster = rand(10000)
-      { text: "<http://toastbucket.com/balls/#{resp}.gif?#{cacheBuster}|#{user}: “#{query}”>" }
+      img = params[:trigger_word] =~ /^enable/ ? 'http://i.imgur.com/NySLl3v.jpg' : "http://toastbucket.com/balls/#{resp}.gif?#{cacheBuster}"
+      { text: "<#{img}|#{user}: “#{query}”>" }
     end
 
     def trying(params)
@@ -70,7 +71,7 @@ module Ernesto
       set :hooks, {
         flickr: /flickr/,
         trying: /trying/,
-        eightball: /^8-?[Bb]all/,
+        eightball: /(^8-?[Bb]all)|(enable)r/,
         roll: /roll/,
         anagram: /^ana(gram)?/
       }
