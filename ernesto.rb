@@ -7,7 +7,7 @@ require 'uri'
 require 'open-uri'
 
 module Ernesto
-  class Helpers
+  class Hooks
     def anagram(params)
       query = params[:text].sub(/^#{params[:trigger_word]}\w*/,'').strip
       query_string = "source_text=#{URI.encode(query)}&seen=true&submitbutton=Generate%20Anagrams"
@@ -63,6 +63,13 @@ module Ernesto
       end
     end
   end
+  
+  class Slashes
+    def excuse(params)
+      content = open('http://programmingexcuses.com/').read
+      content.scan(/<a.+?>(.+)<\/a>/).flatten.first
+    end
+  end
 
   class Application < Sinatra::Base
     configure do
@@ -77,11 +84,20 @@ module Ernesto
       }
     end
 
+    post '/slash' do
+      command = params[:command].strip.downcase.sub(/^\//,'').to_sym
+      response = Slashes.new.send(command, params)
+      case response
+      when Hash then response.to_json
+      when String then { 'text' => response }.to_json
+      end
+    end
+    
     post '/webhook' do
       trigger = params[:trigger_word].strip.downcase
       helper  = settings.hooks.find { |m,re| trigger =~ re }.first
       content_type 'application/json'
-      response = Helpers.new.send(helper, params)
+      response = Hooks.new.send(helper, params)
       case response
       when Hash then response.to_json
       when String then { 'text' => response }.to_json
